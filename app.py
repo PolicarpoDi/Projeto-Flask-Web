@@ -18,15 +18,38 @@ def id(id):
 """@app.route('/login/name/<string:nome>')
 def login_name(nome):
     return f'<h1>O nome desse usuário é {nome}</h1>'"""
+    
+@app.route('/old')
+def index():
+    return '<h1 style="color: blue">Index<h1> <button>Clique aqui</button>'
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/users')    # Qeury string params
+def usuarios():
+    
+    query_params = request.args
+    q = query_params.get('q')
+    page = query_params.get('page')
+    
+    users = {'users': [
+        {'username': 'maria', 'email': 'maria@gmail.com'},
+        {'username': 'antonio', 'email': 'antonio@gmail.com'},
+        {'username': 'carlos', 'email': 'carlos@gmail.com'}
+    ],
+    'q':q,
+    'page':page
+    }
+    
+    return users
+
+
+@app.route('/signup', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def signup():
     if request.method == 'GET':
         return render_template('signup.html')
-    else:
+    elif request.method == 'POST':
         # obter email e senha para cadastrar usuário
-        email = request.form['email_usuario']
+        email = request.form.get['email_usuario'] or None
         senha = request.form['senha_usuario']
         
         if not (email or senha):
